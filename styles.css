@@ -1,0 +1,84 @@
+/* Estilos Personalizados para a Interface Web
+   Foca em design limpo, responsivo e suave com transições
+   Usa cores suaves, sombras e animações para melhor experiência do usuário */
+
+/* Corpo da página: fundo suave e fonte legível */
+body {
+  background-color: #f8f9fa;  /* Fundo cinza claro para suavidade */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  /* Fonte moderna e legível */
+  color: #333;  /* Cor de texto padrão */
+  line-height: 1.6;  /* Espaçamento entre linhas para leitura confortável */
+}
+
+/* Container principal: limita largura máxima para centralização */
+.container {
+  max-width: 900px;  /* Largura máxima para telas grandes */
+}
+
+/* Título principal: cor azul para destaque */
+h1 {
+  color: #007bff;  /* Azul Bootstrap para consistência */
+  font-weight: 600;  /* Peso da fonte para ênfase */
+}
+
+/* Cards: adiciona bordas arredondadas e sombra suave */
+.card {
+  border: none;  /* Remove borda padrão */
+  border-radius: 10px;  /* Bordas arredondadas para suavidade */
+  transition: box-shadow 0.3s ease;  /* Transição suave na sombra ao passar o mouse */
+}
+
+/* Efeito hover nos cards: aumenta sombra para interatividade */
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);  /* Sombra maior ao passar o mouse */
+}
+
+/* Campos de entrada: foco suave com borda colorida */
+.form-control {
+  border-radius: 8px;  /* Bordas arredondadas */
+  border: 1px solid #ddd;  /* Borda cinza clara */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;  /* Transições suaves */
+}
+
+/* Efeito foco nos campos: borda azul e sombra leve */
+.form-control:focus {
+  border-color: #007bff;  /* Borda azul ao focar */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);  /* Sombra azul suave */
+  outline: none;  /* Remove outline padrão do navegador */
+}
+
+/* Botões: transições suaves e arredondamento */
+.btn {
+  border-radius: 8px;  /* Bordas arredondadas */
+  transition: background-color 0.3s ease, transform 0.2s ease;  /* Transições para cor e escala */
+  font-weight: 500;  /* Peso da fonte para botões */
+}
+
+/* Efeito hover nos botões: leve escala para feedback */
+.btn:hover {
+  transform: translateY(-2px);  /* Levanta o botão ao passar o mouse */
+}
+
+/* Alertas: inicialmente ocultos, aparecem com animação */
+.alert {
+  border-radius: 8px;  /* Bordas arredondadas */
+  opacity: 0;  /* Inicia invisível */
+  transform: translateY(-10px);  /* Inicia deslocado para cima */
+  transition: opacity 0.3s ease, transform 0.3s ease;  /* Animação suave de aparecimento */
+}
+
+/* Classe para mostrar alertas: torna visível com animação */
+.alert.show {
+  opacity: 1;  /* Torna opaco */
+  transform: translateY(0);  /* Move para posição normal */
+}
+
+/* Responsividade: ajusta para telas pequenas */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 15px;  /* Padding lateral para telas móveis */
+  }
+  .card {
+    margin-bottom: 20px;  /* Espaçamento maior entre cards em mobile */
+  }
+}

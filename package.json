@@ -1,0 +1,27 @@
+{
+  "name": "project-test-final",
+  "version": "1.0.0",
+  "description": "Projeto de Teste com TDD e BDD",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "cucumber": "cucumber-js",
+    "dev": "browser-sync start --server --files \"**/*\""   
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devrafaela/project-test-final.git"
+  },
+  "keywords": ["tdd", "bdd", "testing", "javascript", "jest", "cucumber"],
+  "author": "Rafaela e Camille",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/devrafaela/project-test-final/issues"
+  },
+  "homepage": "https://github.com/devrafaela/project-test-final#readme",
+  "dependencies": {
+    "@cucumber/cucumber": "^12.2.0",
+    "bootstrap": "^5.3.8",
+    "jest": "^30.2.0"
+  }
+}
