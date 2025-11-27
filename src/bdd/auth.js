@@ -1,89 +1,123 @@
-// Módulo BDD: Sistema de Autenticação com Email e Itens de Mercado
-// Classe que gerencia usuários, login/logout e adição de itens
-// Desenvolvido para suportar cenários BDD: foco no comportamento do usuário
-// Agora carrega usuários do "banco" (localStorage) salvo pelo TDD
+// Importa validações TDD
+import { validateEmail, validateStrongPassword } from '../tdd/validation.js';
 
-// Classe principal do sistema de autenticação
 export class AuthSystem {
-  // Construtor: inicializa o sistema carregando dados do "banco" localStorage
   constructor() {
-    // Carrega usuários salvos pelo TDD (persistência local como banco)
-    this.users = JSON.parse(localStorage.getItem('users')) || [];
-    // Usuário atualmente logado (null se ninguém estiver logado)
+    this.users = this.loadUsers();
     this.loggedInUser = null;
-    // Lista de itens de mercado adicionados após login
-    this.marketItems = JSON.parse(localStorage.getItem('marketItems')) || [];
+
+    // mercado
+    this.marketItems = JSON.parse(localStorage.getItem("marketItems")) || [];
   }
 
-  // Método para registrar usuário (compatibilidade com testes BDD)
-  // Adiciona usuário à lista se não existir
-  registerUser(username, password) {
-    // Verifica se o usuário já existe
-    if (this.users.find(u => u.username === username)) return false;
-    // Adiciona novo usuário
-    this.users.push({ username, password });
-    // Salva no localStorage (banco simulado)
-    localStorage.setItem('users', JSON.stringify(this.users));
-    return true;
-  }
-
-  // Método para login (BDD: comportamento de autenticação com email)
-  // Verifica se email e senha correspondem a um usuário cadastrado no "banco"
-  login(email, password) {
-    // Busca o usuário com email e senha fornecidos no banco
-    const user = this.users.find(u => u.email === email && u.password === password);
-    if (user) {
-      // Define o usuário como logado
-      this.loggedInUser = user;
-      return true;  // Login bem-sucedido
+  // ============================
+  // Persistência localStorage
+  // ============================
+  loadUsers() {
+    try {
+      return JSON.parse(localStorage.getItem("users")) || [];
+    } catch (err) {
+      console.error("Erro ao carregar users:", err);
+      return [];
     }
-    return false;  // Falha no login
   }
 
-  // Método para logout (BDD: comportamento de desconexão)
-  // Remove o usuário logado e limpa itens
+  saveUsers() {
+    try {
+      localStorage.setItem("users", JSON.stringify(this.users));
+    } catch (err) {
+      console.error("Erro ao salvar users:", err);
+    }
+  }
+
+  // ============================
+  // Hash de senha (Web Crypto)
+  // ============================
+  async hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hash = await crypto.subtle.digest("SHA-256", data);
+
+    return Array.from(new Uint8Array(hash))
+      .map(b => b.toString(16).padStart(2, "0"))
+      .join("");
+  }
+
+  // ============================
+  // Registro
+  // ============================
+  async registerUser(email, password, date = null) {
+    if (!validateEmail(email)) return { success: false, error: "invalid_email" };
+    if (!validateStrongPassword(password)) return { success: false, error: "weak_password" };
+
+    this.users = this.loadUsers();
+
+    if (this.users.find(u => u.email === email)) {
+      return { success: false, error: "exists" };
+    }
+
+    const hashed = await this.hashPassword(password);
+
+    const newUser = {
+      email,
+      password: hashed,
+      passwordLength: password.length,
+      date
+    };
+
+    this.users.push(newUser);
+    this.saveUsers();
+
+    return { success: true, error: null };
+  }
+
+  // ============================
+  // Login
+  // ============================
+  async login(email, password) {
+    if (!validateEmail(email)) return { success: false, error: "invalid_email" };
+
+    this.users = this.loadUsers();
+
+    const user = this.users.find(u => u.email === email);
+    if (!user) return { success: false, error: "not_found" };
+
+    const hashed = await this.hashPassword(password);
+
+    if (hashed !== user.password)
+      return { success: false, error: "wrong_password" };
+
+    this.loggedInUser = {
+      email: user.email,
+      date: user.date,
+      passwordLength: user.passwordLength
+    };
+
+    this.marketItems =
+      JSON.parse(localStorage.getItem("marketItems")) || [];
+
+    return { success: true, error: null };
+  }
+
   logout() {
-    // Reseta o usuário logado
     this.loggedInUser = null;
-    // Limpa a lista de itens de mercado
     this.marketItems = [];
-    // Salva no localStorage
-    localStorage.setItem('marketItems', JSON.stringify(this.marketItems));
-    return true;  // Logout sempre bem-sucedido
+    localStorage.setItem("marketItems", JSON.stringify([]));
+
+    return { success: true };
   }
 
-  // Método para adicionar item de mercado (BDD: comportamento após login)
-  // Só permite se o usuário estiver logado
-  addMarketItem(itemName, price) {
-    // Verifica se há usuário logado
-    if (!this.loggedInUser) return false;  // Impede adição sem login
-    // Adiciona o item à lista com nome e preço
-    this.marketItems.push({ name: itemName, price });
-    // Salva no localStorage para persistência
-    localStorage.setItem('marketItems', JSON.stringify(this.marketItems));
-    return true;  // Adição bem-sucedida
+  addMarketItem(name, price) {
+    if (!this.loggedInUser) return { success: false, error: "not_logged_in" };
+
+    this.marketItems.push({ name, price: Number(price) });
+
+    localStorage.setItem("marketItems", JSON.stringify(this.marketItems));
+
+    return { success: true };
   }
 
-  // Método para calcular o total dos itens de mercado
-  // Soma os preços de todos os itens adicionados
   getMarketTotal() {
-    // Usa reduce para somar os preços
-    return this.marketItems.reduce((total, item) => total + item.price, 0);
-  }
-
-  // Método para adicionar ao carrinho (compatibilidade com cenários antigos)
-  // Simula carrinho como lista de itens
-  addToCart(item) {
-    // Verifica se há usuário logado
-    if (!this.loggedInUser) return false;
-    // Adiciona item ao carrinho (simplificado)
-    this.marketItems.push(item);
-    localStorage.setItem('marketItems', JSON.stringify(this.marketItems));
-    return true;
-  }
-
-  // Propriedade para carrinho (compatibilidade)
-  get cart() {
-    return this.marketItems;
+    return this.marketItems.reduce((t, i) => t + i.price, 0);
   }
 }

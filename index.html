@@ -38,28 +38,36 @@
               <form id="registerForm">
                 <!-- Campo de email com feedback dinâmico -->
                 <div class="mb-3">
-                  <label for="regEmail" class="form-label">Email</label>
-                  <input type="email" id="regEmail" class="form-control" placeholder="example@email.com" required>
-                  <div id="emailFeedback" class="feedback text-danger mt-1"></div>
+                  <label for="regEmail" class="form-label">Insira um e-mail válido</label>
+                  <input type="email" id="regEmail" class="form-control" placeholder="exemplo@email.com" required>
+                  <!-- feedback dinâmico -->
+                  <div id="emailFeedback" class="feedback mt-1 text-danger"></div>
                 </div>
-                <!-- Campo de senha com feedback dinâmico e checkbox para mostrar -->
+
+                <!-- Campo de senha com feedback dinâmico -->
                 <div class="mb-3">
-                  <label for="regPassword" class="form-label">Senha</label>
-                  <input type="password" id="regPassword" class="form-control" placeholder="Mín. 8 chars, 1 número, 1 símbolo" required>
+                  <label for="regPassword" class="form-label">Crie uma senha válida</label>
+                  <input type="password" id="regPassword" class="form-control" placeholder="Mín. 8 caracteres e 1 símbolo especial" required>
+                  <!-- feedback dinâmico -->
+                  <div id="passwordFeedback" class="feedback mt-1 text-danger"></div>
+
+                  <!-- Checkbox para mostrar/ocultar senha -->
                   <div class="form-check mt-1">
                     <input class="form-check-input" type="checkbox" id="showPassword">
                     <label class="form-check-label" for="showPassword">
                       Mostrar senha
                     </label>
                   </div>
-                  <div id="passwordFeedback" class="feedback text-danger mt-1"></div>
                 </div>
-                <!-- Campo de data com máscara em tempo real -->
+
+                <!-- Campo de data com placeholder ajustado e máscara -->
                 <div class="mb-3">
                   <label for="regDate" class="form-label">Data de Nascimento</label>
                   <input type="text" id="regDate" class="form-control" placeholder="DD/MM/AAAA" maxlength="10" required>
-                  <div id="dateFeedback" class="feedback text-danger mt-1"></div>
+                  <!-- feedback dinâmico -->
+                  <div id="dateFeedback" class="feedback mt-1 text-danger"></div>
                 </div>
+
                 <!-- Botão de cadastro, desabilitado se inválido -->
                 <button type="submit" id="registerBtn" class="btn btn-gold w-100" disabled>Cadastrar</button>
               </form>
@@ -67,7 +75,7 @@
           </div>
         </div>
 
-        <!-- Seção BDD: Login e Itens (Mantida) -->
+        <!-- Seção BDD: Login e Itens (Mantida, mas foco no TDD) -->
         <div class="col-lg-6 mb-4">
           <div class="card elegant-card animate-slide-up" style="animation-delay: 0.2s;">
             <div class="card-header bg-gold text-dark">
@@ -77,18 +85,19 @@
               <!-- Formulário de login -->
               <form id="loginForm">
                 <div class="mb-3">
-                  <label for="loginEmail" class="form-label">Email</label>
-                  <input type="email" id="loginEmail" class="form-control" placeholder="Email cadastrado" required>
+                  <label for="loginEmail" class="form-label">E-mail</label>
+                  <input type="email" id="loginEmail" class="form-control" placeholder="Insira aqui seu e-mail" required>
                 </div>
                 <div class="mb-3">
                   <label for="loginPassword" class="form-label">Senha</label>
-                  <input type="password" id="loginPassword" class="form-control" placeholder="Sua senha" required>
+                  <input type="password" id="loginPassword" class="form-control" placeholder="Insira aqui sua senha" required>
                 </div>
                 <div class="d-flex gap-2">
                   <button type="submit" class="btn btn-success">Login</button>
                   <button type="button" id="logoutBtn" class="btn btn-warning">Logout</button>
                 </div>
               </form>
+
               <!-- Seção de itens, visível após login -->
               <div id="marketSection" class="mt-4" style="display: none;">
                 <h6>Adicionar Itens de Mercado</h6>
@@ -98,12 +107,15 @@
                   <option>Pão - R$ 3</option>
                 </select>
                 <button id="addItemBtn" class="btn btn-info">Adicionar</button>
+
                 <ul id="itemList" class="list-group mt-2"></ul>
+
                 <p id="total" class="fw-bold text-gold mt-2">Total: R$ 0</p>
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>

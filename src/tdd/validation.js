@@ -1,26 +1,22 @@
+// src/tdd/validation.js
 // Módulo TDD: Validações Rigorosas para Cadastro de Usuário
 // Este arquivo contém funções de validação desenvolvidas com TDD
-// Cada função foi criada seguindo o ciclo RED-GREEN-REFACTOR: teste falha (RED), código para passar (GREEN), refatoração (REFACTOR)
-// Agora com validações mais rigorosas: email deve ter formato exato, senha com símbolo especial
+// Requisitos: email no formato usuário@domínio.ext e senha com mínimo 8 caracteres,
+// ao menos 1 número e ao menos 1 símbolo especial
 
 // Função para validar um endereço de email
-// Verifica se o email segue o formato exato: usuario@dominio.com (ou .br, etc.)
-// Desenvolvida com TDD: testes garantiram que rejeite emails sem @ ou domínio
 export function validateEmail(email) {
-  // Expressão regular estrita: deve ter caracteres antes de @, domínio e extensão válida (ex: .com, .br)
-  // Não aceita palavras simples sem @ ou domínio
+  // Expressão regular estrita: caracteres antes do @, domínio e extensão (2+)
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  // Retorna true se corresponder exatamente ao formato, false caso contrário
   return emailRegex.test(email);
 }
 
 // Função para validar se uma senha é forte
-// Requisitos rigorosos: mínimo 8 caracteres, pelo menos 1 número e 1 símbolo especial (ex: !@#$%)
-// Criada com TDD para garantir segurança máxima no cadastro
+// Requisitos: mínimo 8 caracteres, pelo menos 1 dígito e pelo menos 1 símbolo (não alfanumérico)
 export function validateStrongPassword(password) {
-  // Regex que impõe os critérios: lookahead para verificar presença de número e símbolo
-  // Deve ter pelo menos 8 caracteres, 1 dígito e 1 símbolo especial
-  const passwordRegex = /^(?=.*\d)(?=.*[!@#$%^&*()_+\-=\$\${};':"\\|,.<>\/?]).{8,}$/;
-  // Retorna true se atender a todos os requisitos estritos
+  if (typeof password !== 'string') return false;
+  // Lookahead para garantir pelo menos um dígito e pelo menos um símbolo especial
+  // Símbolos considerados: qualquer caractere que não seja letra ou número (ex: !@#$%^&*()-_=+[]{};:'",.<>/?\|)
+  const passwordRegex = /^(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
   return passwordRegex.test(password);
 }

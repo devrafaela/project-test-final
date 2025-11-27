@@ -1,49 +1,125 @@
 // Arquivo de Testes TDD para o Módulo de Validação
 // Usa Jest para executar testes unitários rigorosos
-// Segue o ciclo RED-GREEN-REFACTOR: escreve teste (RED), implementa código (GREEN), refatora (REFACTOR)
+// Cobre cenários completos de email, senha e data
 
-// Importa as funções a serem testadas do módulo de validação
 import { validateEmail, validateStrongPassword } from './validation.js';
-// Importa a função de formatação de data
 import { formatDate } from './dateFormatter.js';
 
-// Grupo de testes para o módulo de validação
 describe('Módulo de Validação (TDD)', () => {
-  // Testes rigorosos para validateEmail
-  test('deve validar um email correto e estrito', () => {
-    // Espera que um email válido retorne true
-    expect(validateEmail('teste@example.com')).toBe(true);
+
+  // ============================================================
+  // EMAIL
+  // ============================================================
+  describe('validateEmail - Validação de Email', () => {
+    
+    test('deve validar emails corretos e bem formatados', () => {
+      expect(validateEmail('teste@example.com')).toBe(true);
+      expect(validateEmail('usuario.teste@dominio.com.br')).toBe(true);
+      expect(validateEmail('nome_sobrenome123@site.net')).toBe(true);
+      expect(validateEmail('user+tag@gmail.com')).toBe(true);
+    });
+
+    test('deve falhar para emails sem @', () => {
+      expect(validateEmail('emailinvalido.com')).toBe(false);
+      expect(validateEmail('usuario.dominio')).toBe(false);
+    });
+
+    test('deve falhar para emails sem domínio', () => {
+      expect(validateEmail('teste@')).toBe(false);
+      expect(validateEmail('usuario@.com')).toBe(false);
+    });
+
+    test('deve falhar para emails sem extensão válida', () => {
+      expect(validateEmail('teste@dominio')).toBe(false);
+      expect(validateEmail('teste@dominio.')).toBe(false);
+      expect(validateEmail('teste@dominio.c')).toBe(false); // extensão mínima 2 letras
+    });
+
+    test('deve falhar para caracteres inválidos', () => {
+      expect(validateEmail('us er@dominio.com')).toBe(false);
+      expect(validateEmail('usuario@domínio.com')).toBe(false); // acento inválido
+      expect(validateEmail('usuario@@dominio.com')).toBe(false);
+    });
+
+    test('deve falhar para email vazio ou não string', () => {
+      expect(validateEmail('')).toBe(false);
+      expect(validateEmail(null)).toBe(false);
+      expect(validateEmail(undefined)).toBe(false);
+    });
+
   });
 
-  test('deve invalidar um email incorreto ou incompleto', () => {
-    // Espera que emails sem @, domínio ou extensão retornem false
-    expect(validateEmail('emailinvalido')).toBe(false);
-    expect(validateEmail('teste@')).toBe(false);
-    expect(validateEmail('@example.com')).toBe(false);
+  // ============================================================
+  // SENHA FORTE
+  // ============================================================
+  describe('validateStrongPassword - Validação de Senha Forte', () => {
+    
+    test('deve validar senhas fortes (8+ chars, 1 número, 1 símbolo)', () => {
+      expect(validateStrongPassword('Senha123!')).toBe(true);
+      expect(validateStrongPassword('Teste#2024')).toBe(true);
+      expect(validateStrongPassword('@@123abc')).toBe(true);
+      expect(validateStrongPassword('Abcdef1$')).toBe(true);
+    });
+
+    test('deve falhar para senhas sem número', () => {
+      expect(validateStrongPassword('SenhaForte!')).toBe(false);
+      expect(validateStrongPassword('Teste!Teste')).toBe(false);
+    });
+
+    test('deve falhar para senhas sem símbolo', () => {
+      expect(validateStrongPassword('SenhaForte123')).toBe(false);
+      expect(validateStrongPassword('Abcdef123')).toBe(false);
+    });
+
+    test('deve falhar para senhas com menos de 8 caracteres', () => {
+      expect(validateStrongPassword('A1!a')).toBe(false);
+      expect(validateStrongPassword('1234!ab')).toBe(false);
+    });
+
+    test('deve falhar para entradas não-string', () => {
+      expect(validateStrongPassword(null)).toBe(false);
+      expect(validateStrongPassword(undefined)).toBe(false);
+      expect(validateStrongPassword(12345678)).toBe(false);
+    });
+
   });
 
-  // Testes rigorosos para validateStrongPassword
-  test('deve validar uma senha forte e completa', () => {
-    // Senha com 8+ caracteres, maiúscula, minúscula e número
-    expect(validateStrongPassword('SenhaForte123')).toBe(true);
+  // ============================================================
+  // DATA (DD/MM/AAAA)
+  // ============================================================
+  describe('formatDate - Formatação de Data', () => {
+
+    test('deve formatar corretamente datas completas DD/MM/AAAA', () => {
+      expect(formatDate('05/10/2023')).toBe('05/10/2023');
+      expect(formatDate('01/01/2000')).toBe('01/01/2000');
+      expect(formatDate('31/12/1999')).toBe('31/12/1999');
+    });
+
+    test('deve converter datas AAAA-MM-DD corretamente', () => {
+      expect(formatDate('2023-10-05')).toBe('05/10/2023');
+      expect(formatDate('2000-01-01')).toBe('01/01/2000');
+    });
+
+    test('deve falhar para datas inválidas', () => {
+      expect(formatDate('32/01/2023')).toBe(null);
+      expect(formatDate('00/10/2023')).toBe(null);
+      expect(formatDate('31/13/2023')).toBe(null);
+      expect(formatDate('2023-20-10')).toBe(null);
+      expect(formatDate('aaaa-bb-cc')).toBe(null);
+    });
+
+    test('deve falhar para formatos incompletos ou quebrados', () => {
+      expect(formatDate('10/2023')).toBe(null);
+      expect(formatDate('2023')).toBe(null);
+      expect(formatDate('10/10')).toBe(null);
+    });
+
+    test('deve falhar para valores não-string', () => {
+      expect(formatDate(null)).toBe(null);
+      expect(formatDate(undefined)).toBe(null);
+      expect(formatDate(12345)).toBe(null);
+    });
+
   });
 
-  test('deve invalidar uma senha fraca ou incompleta', () => {
-    // Senhas sem atender aos critérios rigorosos
-    expect(validateStrongPassword('fraca')).toBe(false);  // Curta e sem maiúscula/número
-    expect(validateStrongPassword('senhafraca')).toBe(false);  // Sem maiúscula/número
-    expect(validateStrongPassword('SENHAFRACA')).toBe(false);  // Sem minúscula/número
-    expect(validateStrongPassword('SenhaFraca')).toBe(false);  // Sem número
-  });
-
-  // Testes para formatDate
-  test('deve formatar uma data válida', () => {
-    // Converte para formato brasileiro
-    expect(formatDate('2023-10-05')).toBe('05/10/2023');
-  });
-
-  test('deve retornar null para uma data inválida', () => {
-    // Para entrada não reconhecida como data, retorna null
-    expect(formatDate('datainvalida')).toBe(null);
-  });
 });

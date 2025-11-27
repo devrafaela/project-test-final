@@ -1,4 +1,4 @@
-// Step Definitions para Cenários de Carrinho
+// Step Definitions para Cenários de Carrinho (Ajustado para Itens Aleatórios)
 // Implementa os passos para adicionar itens ao carrinho
 // Conecta os cenários Gherkin à lógica do sistema de autenticação
 
@@ -13,9 +13,9 @@ let authSystem = new AuthSystem();
 // Passo Dado: Usuário logado
 Given('que eu estou logado com usuário {string}', function (username) {
   // Registra o usuário com uma senha padrão para o teste
-  authSystem.registerUser(username, 'Senha123');
+  authSystem.registerUser(username, 'Senha123!');
   // Faz login com as credenciais
-  authSystem.login(username, 'Senha123');
+  authSystem.login(username, 'Senha123!');
 });
 
 // Passo Quando: Adiciona item ao carrinho
@@ -24,8 +24,20 @@ When('eu adiciono {string} ao carrinho', function (item) {
   this.result = authSystem.addToCart(item);
 });
 
+// Passo Quando: Adiciona item com preço (para itens aleatórios)
+When('eu adiciono {string} com preço {int}', function (item, price) {
+  // Adiciona item com preço específico (para testes de itens aleatórios)
+  authSystem.addMarketItem(item, price);
+});
+
 // Passo Então: Verifica se o item está no carrinho
 Then('o carrinho deve conter {string}', function (item) {
   // Verifica se o item está presente no array do carrinho
   if (!authSystem.cart.includes(item)) throw new Error('Item não está no carrinho');
+});
+
+// Passo Então: Verifica total
+Then('o total deve ser {int}', function (expected) {
+  // Verifica se o total calculado corresponde ao esperado
+  if (authSystem.getMarketTotal() !== expected) throw new Error('Total incorreto');
 });

@@ -1,6 +1,6 @@
-// Step Definitions para Cenários de Login
+// Step Definitions para Cenários de Login (Ajustado para Validações e Mensagens)
 // Implementa os passos dos cenários Gherkin em código JS
-// Conecta cenários BDD à lógica de autenticação com email
+// Conecta cenários BDD à lógica de autenticação com email e validações rigorosas
 
 // Importa hooks do Cucumber para definir passos
 import { Given, When, Then } from '@cucumber/cucumber';
@@ -13,7 +13,7 @@ let authSystem = new AuthSystem();
 // Passo Dado: Usuário com email cadastrado
 Given('que eu tenho um email {string} cadastrado', function (email) {
   // Simula cadastro adicionando usuário à lista (compatível com TDD)
-  authSystem.users.push({ email, password: 'Senha123' });
+  authSystem.users.push({ email, password: 'Senha123!' });
 });
 
 // Passo Dado: Sem email cadastrado
@@ -24,8 +24,8 @@ Given('que eu não tenho email cadastrado', function () {
 // Passo Dado: Usuário logado
 Given('que eu estou logado com email {string}', function (email) {
   // Simula cadastro e login automático
-  authSystem.users.push({ email, password: 'Senha123' });
-  authSystem.login(email, 'Senha123');
+  authSystem.users.push({ email, password: 'Senha123!' });
+  authSystem.login(email, 'Senha123!');
 });
 
 // Passo Quando: Faz login
@@ -56,4 +56,10 @@ Then('eu não devo estar logado', function () {
 Then('eu devo estar deslogado', function () {
   // Verifica se logout foi bem-sucedido
   if (authSystem.loggedInUser) throw new Error('Ainda está logado');
+});
+
+// Passo Então: Deve ver mensagem específica
+Then('eu devo ver {string}', function (message) {
+  // Verifica se a mensagem de erro corresponde (usado para "E-mail não cadastrado" ou "Senha incorreta")
+  if (this.result !== message) throw new Error(`Mensagem esperada: ${message}, mas foi: ${this.result}`);
 });

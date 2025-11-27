@@ -3,16 +3,24 @@
   "version": "1.0.0",
   "description": "Projeto de Teste com TDD e BDD",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "jest",
     "cucumber": "cucumber-js",
-    "dev": "browser-sync start --server --files \"**/*\""   
+    "dev": "browser-sync start --server --files \"**/*\""
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/devrafaela/project-test-final.git"
   },
-  "keywords": ["tdd", "bdd", "testing", "javascript", "jest", "cucumber"],
+  "keywords": [
+    "tdd",
+    "bdd",
+    "testing",
+    "javascript",
+    "jest",
+    "cucumber"
+  ],
   "author": "Rafaela e Camille",
   "license": "ISC",
   "bugs": {
@@ -21,7 +29,11 @@
   "homepage": "https://github.com/devrafaela/project-test-final#readme",
   "dependencies": {
     "@cucumber/cucumber": "^12.2.0",
+    "body-parser": "^2.2.1",
     "bootstrap": "^5.3.8",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "express": "^5.1.0",
     "jest": "^30.2.0"
   }
 }

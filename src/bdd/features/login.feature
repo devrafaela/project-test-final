@@ -1,6 +1,6 @@
-# Cenário BDD para Autenticação com Email
+# Cenário BDD para Autenticação com Email (Ajustado para Validações e Mensagens)
 # Escrito em Gherkin para focar no comportamento do usuário
-# Este arquivo define cenários de login e logout usando email
+# Este arquivo define cenários de login com validações rigorosas e mensagens específicas
 
 Feature: Autenticação com Email
   Como um usuário
@@ -9,13 +9,18 @@ Feature: Autenticação com Email
 
   Scenario: Login bem-sucedido
     Dado que eu tenho um email "teste@example.com" cadastrado
-    Quando eu faço login com email "teste@example.com" e senha "Senha123"
+    Quando eu faço login com email "teste@example.com" e senha "Senha123!"
     Então eu devo estar logado
 
-  Scenario: Login falhado
+  Scenario: Login falhado - Email não cadastrado
     Dado que eu não tenho email cadastrado
-    Quando eu faço login com email "invalido@example.com" e senha "errada"
-    Então eu não devo estar logado
+    Quando eu faço login com email "naoexiste@example.com" e senha "Senha123!"
+    Então eu devo ver "E-mail não cadastrado"
+
+  Scenario: Login falhado - Senha incorreta
+    Dado que eu tenho um email "teste@example.com" cadastrado
+    Quando eu faço login com email "teste@example.com" e senha "senhaerrada"
+    Então eu devo ver "Senha incorreta"
 
   Scenario: Logout
     Dado que eu estou logado com email "teste@example.com"
