@@ -1,9 +1,13 @@
 // Step Definitions para Cenários de Registro
 // Implementa os passos para registro de usuário
+// Compatível com BDD, embora registro principal seja no TDD
 
+// Importa hooks do Cucumber
 import { Given, When, Then } from '@cucumber/cucumber';
+// Importa o sistema de autenticação
 import { AuthSystem } from '../auth.js';
 
+// Instancia o sistema
 let authSystem = new AuthSystem();
 
 // Passo Dado: Na página de registro

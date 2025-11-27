@@ -1,12 +1,14 @@
-# Cenário BDD para Carrinho de Compras (Funcionalidade Adicional)
-# Foca no comportamento de adicionar itens ao carrinho
+# Cenário BDD para Adição de Itens de Mercado
+# Foca no comportamento de adicionar itens após login e calcular total
+# Este arquivo define cenários para testar a funcionalidade de carrinho/itens
 
-Feature: Carrinho de Compras
-  Como um usuário logado
-  Eu quero adicionar itens ao meu carrinho
-  Para fazer compras
+Feature: Adição de Itens de Mercado
+  Como usuário logado
+  Eu quero adicionar itens de mercado
+  Para ver o total dos preços
 
-  Scenario: Adicionar item ao carrinho
-    Dado que eu estou logado com usuário "usuario1"
-    Quando eu adiciono "Maçã" ao carrinho
-    Então o carrinho deve conter "Maçã"
+  Scenario: Adicionar item e calcular total
+    Dado que eu estou logado com email "teste@example.com"
+    Quando eu adiciono "Arroz" com preço 10
+    E eu adiciono "Leite" com preço 5
+    Então o total deve ser 15

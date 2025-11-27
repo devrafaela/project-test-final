@@ -16,10 +16,9 @@ project-test-final/
 │   │   └── auth.js                # Código principal do módulo BDD (autenticação e carrinho)
 │   └── utils/
 │       └── helpers.js             # Funções auxiliares compartilhadas
-├── public/
-│   ├── index.html                 # Página principal da aplicação web (interface bonita)
-│   ├── styles.css                 # Estilos CSS para design responsivo e moderno
-│   └── app.js                     # JS para interatividade da interface (integra TDD e BDD)
+├── index.html                 # Página principal da aplicação web (interface bonita)
+├── styles.css                 # Estilos CSS para design responsivo e moderno
+├── app.js                     # JS para interatividade da interface (integra TDD e BDD)
 ├── package.json                   # Configuração do projeto Node.js (dependências: Jest, Cucumber.js, etc.)
 ├── jest.config.js                 # Configuração do Jest
 ├── cucumber.js                    # Configuração do Cucumber.js

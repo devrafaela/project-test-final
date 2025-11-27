@@ -1,5 +1,6 @@
 # Cenário BDD para Registro de Usuário (Funcionalidade Adicional)
 # Foca no comportamento de criação de conta
+# Este cenário testa o registro, embora o principal seja no TDD
 
 Feature: Registro de Usuário
   Como um novo usuário

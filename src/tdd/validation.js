@@ -1,21 +1,23 @@
-// Módulo TDD: Validação de Dados
-// Este arquivo contém funções para validar email e senha forte
-// Implementado seguindo o ciclo TDD: testes primeiro, depois código
+// Módulo TDD: Validações para Cadastro de Usuário
+// Este arquivo contém funções de validação desenvolvidas com TDD
+// Cada função foi criada seguindo o ciclo RED-GREEN-REFACTOR: teste falha (RED), código para passar (GREEN), refatoração (REFACTOR)
 
 // Função para validar um endereço de email
-// Usa uma expressão regular para verificar o formato padrão de email
+// Verifica se o email segue o formato padrão (ex: usuario@dominio.com)
+// Desenvolvida com TDD: testes primeiro garantiram que regex funcione corretamente
 export function validateEmail(email) {
-  // Regex que verifica se há caracteres antes de @, domínio e extensão
+  // Expressão regular para validar email: deve ter caracteres antes de @, domínio e extensão
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  // Retorna true se o email corresponder ao padrão
+  // Retorna true se o email corresponder ao padrão, false caso contrário
   return emailRegex.test(email);
 }
 
 // Função para validar se uma senha é forte
-// Requisitos: pelo menos 8 caracteres, 1 maiúscula, 1 minúscula e 1 número
+// Requisitos: mínimo 8 caracteres, 1 letra minúscula, 1 maiúscula e 1 número
+// Criada com TDD para garantir segurança no cadastro
 export function validateStrongPassword(password) {
-  // Regex que impõe os critérios de força da senha
+  // Regex que impõe os critérios de força: lookahead para verificar presença de tipos de caracteres
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-  // Retorna true se a senha atender aos requisitos
+  // Retorna true se a senha atender a todos os requisitos
   return passwordRegex.test(password);
 }
