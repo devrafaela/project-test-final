@@ -1,23 +1,26 @@
-// Módulo TDD: Validações para Cadastro de Usuário
+// Módulo TDD: Validações Rigorosas para Cadastro de Usuário
 // Este arquivo contém funções de validação desenvolvidas com TDD
 // Cada função foi criada seguindo o ciclo RED-GREEN-REFACTOR: teste falha (RED), código para passar (GREEN), refatoração (REFACTOR)
+// Agora com validações mais rigorosas: email deve ter formato exato, senha com símbolo especial
 
 // Função para validar um endereço de email
-// Verifica se o email segue o formato padrão (ex: usuario@dominio.com)
-// Desenvolvida com TDD: testes primeiro garantiram que regex funcione corretamente
+// Verifica se o email segue o formato exato: usuario@dominio.com (ou .br, etc.)
+// Desenvolvida com TDD: testes garantiram que rejeite emails sem @ ou domínio
 export function validateEmail(email) {
-  // Expressão regular para validar email: deve ter caracteres antes de @, domínio e extensão
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  // Retorna true se o email corresponder ao padrão, false caso contrário
+  // Expressão regular estrita: deve ter caracteres antes de @, domínio e extensão válida (ex: .com, .br)
+  // Não aceita palavras simples sem @ ou domínio
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  // Retorna true se corresponder exatamente ao formato, false caso contrário
   return emailRegex.test(email);
 }
 
 // Função para validar se uma senha é forte
-// Requisitos: mínimo 8 caracteres, 1 letra minúscula, 1 maiúscula e 1 número
-// Criada com TDD para garantir segurança no cadastro
+// Requisitos rigorosos: mínimo 8 caracteres, pelo menos 1 número e 1 símbolo especial (ex: !@#$%)
+// Criada com TDD para garantir segurança máxima no cadastro
 export function validateStrongPassword(password) {
-  // Regex que impõe os critérios de força: lookahead para verificar presença de tipos de caracteres
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-  // Retorna true se a senha atender a todos os requisitos
+  // Regex que impõe os critérios: lookahead para verificar presença de número e símbolo
+  // Deve ter pelo menos 8 caracteres, 1 dígito e 1 símbolo especial
+  const passwordRegex = /^(?=.*\d)(?=.*[!@#$%^&*()_+\-=\$\${};':"\\|,.<>\/?]).{8,}$/;
+  // Retorna true se atender a todos os requisitos estritos
   return passwordRegex.test(password);
 }
