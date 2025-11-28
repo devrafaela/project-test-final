@@ -122,13 +122,26 @@ describe('Módulo de Validação (TDD)', () => {
 
   });
 
-  // DEMO TDD: REQUISITO NOVO — não aceitar espaços em senhas
+
+
+
+  // DEMO TDD (validation.js): REQUISITO NOVO — não aceitar espaços em senhas
   describe('TDD Demo - sem espaços na senha (RED)', () => {
     test('senha contendo espaço deve falhar', () => {
       expect(validateStrongPassword('Abc def1!')).toBe(false);
     });
   });
 
+
+
+
+
+    // DEMO TDD: REQUISITO NOVO — aceitar espaços ao redor da string de data
+  describe('TDD Demo - trim de datas (RED)', () => {
+    test('deve aceitar datas com espaços ao redor', () => {
+      expect(formatDate(' 05/10/2023 ')).toBe('05/10/2023');
+    });
+  });
 
 
 });
