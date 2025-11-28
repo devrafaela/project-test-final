@@ -1,12 +1,45 @@
+// ============================================================
+// Módulo de Autenticação (AuthSystem)
+// Compatível com Node.js (BDD/TDD) e navegador
+// ============================================================
+
+// ============================
+// Mock localStorage para Node.js
+// ============================
+if (typeof localStorage === 'undefined' || localStorage === null) {
+  global.localStorage = {
+    _storage: {},
+    setItem(key, value) {
+      this._storage[key] = value;
+    },
+    getItem(key) {
+      return this._storage[key] || null;
+    },
+    removeItem(key) {
+      delete this._storage[key];
+    },
+    clear() {
+      this._storage = {};
+    }
+  };
+}
+
+// ============================
 // Importa validações TDD
+// ============================
 import { validateEmail, validateStrongPassword } from '../tdd/validation.js';
 
+// ============================================================
+// Classe AuthSystem
+// ============================================================
 export class AuthSystem {
   constructor() {
+    // Lista de usuários
     this.users = this.loadUsers();
+    // Usuário logado
     this.loggedInUser = null;
 
-    // mercado
+    // Itens do mercado (carrinho/market)
     this.marketItems = JSON.parse(localStorage.getItem("marketItems")) || [];
   }
 
@@ -99,6 +132,9 @@ export class AuthSystem {
     return { success: true, error: null };
   }
 
+  // ============================
+  // Logout
+  // ============================
   logout() {
     this.loggedInUser = null;
     this.marketItems = [];
@@ -107,6 +143,9 @@ export class AuthSystem {
     return { success: true };
   }
 
+  // ============================
+  // Adicionar item ao mercado
+  // ============================
   addMarketItem(name, price) {
     if (!this.loggedInUser) return { success: false, error: "not_logged_in" };
 
@@ -117,6 +156,9 @@ export class AuthSystem {
     return { success: true };
   }
 
+  // ============================
+  // Calcula total dos itens
+  // ============================
   getMarketTotal() {
     return this.marketItems.reduce((t, i) => t + i.price, 0);
   }
