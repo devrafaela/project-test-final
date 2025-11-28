@@ -18,6 +18,11 @@ export function validateStrongPassword(password) {
   if (typeof password !== 'string') return false;
   // Lookahead para garantir pelo menos um dígito e pelo menos um símbolo especial
   // Símbolos considerados: qualquer caractere que não seja letra ou número (ex: !@#$%^&*()-_=+[]{};:'",.<>/?\|)
-  const passwordRegex = /^(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+  // No teste RED ele esta assim>
+  //const passwordRegex = /^(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+  //Na refatoração GREEN ele ficou assim>
+  const passwordRegex = /^(?!.*\s)(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
   return passwordRegex.test(password);
 }
