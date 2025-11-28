@@ -3,6 +3,9 @@
 export function formatDate(dateString) {
   if (typeof dateString !== 'string') return null;
 
+  // --- CORREÇÃO MINIMA (GREEN): remover espaços externos
+  dateString = dateString.trim();
+
   let normalizedDate = dateString;
 
   if (dateString.includes('/')) {
@@ -24,6 +27,3 @@ export function formatDate(dateString) {
 
   return date.toLocaleDateString('pt-BR');
 }
-
-
-
