@@ -178,14 +178,16 @@ const loginEmail = document.getElementById("loginEmail");
 const loginPassword = document.getElementById("loginPassword");
 const logoutBtn = document.getElementById("logoutBtn");
 const marketSection = document.getElementById("marketSection");
-const itemSelect = document.getElementById("itemSelect");
+const itemCheckboxes = document.getElementById("itemCheckboxes");
+const itemList = document.getElementById("itemList");
+const totalEl = document.getElementById("total");
 
 // =======================
-// ITENS DINÂMICOS ALEATÓRIOS
+// ITENS DINÂMICOS ALEATÓRIOS COMO CHECKBOX
 // =======================
 const availableItems = [
-  "Arroz", "Feijão", "Leite", "Pão", "Queijo", "Manteiga", 
-  "Macarrão", "Tomate", "Alface", "Cenoura", "Frango", "Carne", 
+  "Arroz", "Feijão", "Leite", "Pão", "Queijo", "Manteiga",
+  "Macarrão", "Tomate", "Alface", "Cenoura", "Frango", "Carne",
   "Ovo", "Açúcar", "Café", "Chocolate"
 ];
 
@@ -194,20 +196,54 @@ function getRandomPrice() {
   return Math.floor(Math.random() * 20) + 1;
 }
 
-// Popula o select com itens e preços aleatórios
+// Set para impedir repetição de itens
+const selectedItemsSet = new Set();
+
+// =======================
+// CRIA CHECKBOXES
+// =======================
 availableItems.forEach(item => {
-  const option = document.createElement("option");
-  option.value = `${item} - R$ ${getRandomPrice()}`;
-  option.textContent = option.value;
-  itemSelect.appendChild(option);
+  const price = getRandomPrice();
+  const id = `item-${item}`;
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "form-check";
+
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.className = "form-check-input";
+  checkbox.id = id;
+  checkbox.dataset.name = item;
+  checkbox.dataset.price = price;
+
+  const label = document.createElement("label");
+  label.className = "form-check-label";
+  label.htmlFor = id;
+  label.textContent = `${item} - R$ ${price}`;
+
+  wrapper.appendChild(checkbox);
+  wrapper.appendChild(label);
+  itemCheckboxes.appendChild(wrapper);
+
+  // =======================
+  // EVENTO DE CLIQUE NO CHECKBOX
+  // =======================
+  checkbox.addEventListener("change", (e) => {
+    const name = e.target.dataset.name;
+    const price = Number(e.target.dataset.price);
+
+    if (e.target.checked && !selectedItemsSet.has(name)) {
+      authSystem.addMarketItem(name, price);
+      selectedItemsSet.add(name);
+      checkbox.disabled = true; // impede repetição
+      updateMarket();
+    }
+  });
 });
 
-
-
-const addItemBtn = document.getElementById("addItemBtn");
-const itemList = document.getElementById("itemList");
-const totalEl = document.getElementById("total");
-
+// =======================
+// LOGIN SUBMIT
+// =======================
 loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -253,34 +289,103 @@ logoutBtn.addEventListener("click", () => {
   marketSection.style.display = "none";
   itemList.innerHTML = "";
   totalEl.textContent = "Total: R$ 0";
+  selectedItemsSet.clear(); // limpa itens selecionados
+  document.querySelectorAll("#itemCheckboxes input[type=checkbox]").forEach(cb => {
+    cb.checked = false;
+    cb.disabled = false;
+  });
   alert("Logout realizado!");
 });
 
 // =======================
-// ADICIONAR ITENS
+// BOTÕES FINALIZAR / EDITAR / LIMPAR
 // =======================
-addItemBtn.addEventListener("click", () => {
-  const selected = itemSelect.value.split(" - R$ ");
-  const name = selected[0];
-  const price = Number(selected[1]);
+const finalizeBtn = document.getElementById("finalizeBtn");
+const editBtn = document.getElementById("editBtn");
+const clearBtn = document.getElementById("clearBtn"); // agora apenas referencia ao botão HTML
 
-  authSystem.addMarketItem(name, price);
+const availableItemsCard = document.getElementById("availableItemsCard");
+const shoppingListCard = document.getElementById("shoppingListCard");
+
+// =======================
+// FINALIZA COMPRA
+// =======================
+finalizeBtn.addEventListener("click", () => {
+  availableItemsCard.style.display = "none";
+  finalizeBtn.style.display = "none";
+  editBtn.style.display = "inline-block";
+  clearBtn.style.display = "inline-block";
+
+  // Atualiza lista final removendo duplicados
+  const uniqueItems = [];
+  authSystem.marketItems.forEach(item => {
+    if (!uniqueItems.some(it => it.name === item.name)) {
+      uniqueItems.push(item);
+    }
+  });
+  authSystem.marketItems = uniqueItems;
+
   updateMarket();
 });
 
 // =======================
-// ATUALIZA LISTA DE ITENS
+// EDITAR COMPRA
+// =======================
+editBtn.addEventListener("click", () => {
+  availableItemsCard.style.display = "block";
+  finalizeBtn.style.display = "inline-block";
+  editBtn.style.display = "none";
+  clearBtn.style.display = "inline-block";
+
+  // Atualiza checkboxes para refletir itens já selecionados
+  document.querySelectorAll("#itemCheckboxes input[type=checkbox]").forEach(checkbox => {
+    const name = checkbox.dataset.name;
+    if (authSystem.marketItems.some(it => it.name === name)) {
+      checkbox.checked = true;
+      checkbox.disabled = true;
+    } else {
+      checkbox.checked = false;
+      checkbox.disabled = false;
+    }
+  });
+
+  updateMarket();
+});
+
+// =======================
+// LIMPAR ITENS
+// =======================
+clearBtn.addEventListener("click", () => {
+  authSystem.marketItems = [];
+  selectedItemsSet.clear();
+
+  document.querySelectorAll("#itemCheckboxes input[type=checkbox]").forEach(checkbox => {
+    checkbox.checked = false;
+    checkbox.disabled = false;
+  });
+
+  updateMarket();
+});
+
+// =======================
+// ATUALIZA LISTA DE ITENS (SEM REPETIÇÃO)
 // =======================
 function updateMarket() {
   itemList.innerHTML = "";
+  const displayedItems = [];
   authSystem.marketItems.forEach(item => {
-    const li = document.createElement("li");
-    li.className = "list-group-item d-flex justify-content-between align-items-center";
-    li.textContent = item.name;
-    const span = document.createElement("span");
-    span.textContent = `R$ ${item.price}`;
-    li.appendChild(span);
-    itemList.appendChild(li);
+    if (!displayedItems.some(it => it.name === item.name)) {
+      const li = document.createElement("li");
+      li.className = "list-group-item d-flex justify-content-between align-items-center";
+      li.textContent = item.name;
+
+      const span = document.createElement("span");
+      span.textContent = `R$ ${item.price}`;
+      li.appendChild(span);
+
+      itemList.appendChild(li);
+      displayedItems.push(item);
+    }
   });
 
   totalEl.textContent = `Total: R$ ${authSystem.getMarketTotal()}`;

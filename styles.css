@@ -96,6 +96,62 @@ body {
   transition: color 0.3s ease;
 }
 
+
+/* Cards de listas sem zoom nem borda dourada ao hover */
+.list-card {
+  transform: none !important;
+  border-color: rgba(0,0,0,0.3) !important;
+}
+
+.list-card:hover {
+  transform: none !important;
+  border-color: rgba(0,0,0,0.3) !important;
+}
+
+
+/* =======================
+   BOTÃO FINALIZAR (VERDE)
+   ======================= */
+#finalizeBtn {
+  background-color: #28a745; /* verde */
+  color: #fff; /* texto branco */
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+#finalizeBtn:hover {
+  background-color: #218838; /* verde mais escuro */
+}
+
+/* =======================
+   BOTÃO EDITAR (AMARELO)
+   ======================= */
+#editBtn {
+  background-color: #ffc107; /* amarelo */
+  color: #fff; /* texto branco */
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+#editBtn:hover {
+  background-color: #e0a800; /* amarelo mais escuro */
+}
+
+/* =======================
+   BOTÃO LIMPAR (VERMELHO)
+   ======================= */
+#clearBtn {
+  background-color: #dc3545; /* vermelho */
+  color: #fff; /* texto branco */
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+#clearBtn:hover {
+  background-color: #c82333; /* vermelho mais escuro */
+}
+
+
 /* Responsivo */
 @media (max-width: 768px) {
   .hero-header h1 { font-size: 2rem; }
