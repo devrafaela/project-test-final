@@ -11,6 +11,7 @@ export function validateEmail(email) {
   return emailRegex.test(email);
 }
 
+
 // Função para validar se uma senha é forte
 // Requisitos: mínimo 8 caracteres, pelo menos 1 dígito e pelo menos 1 símbolo (não alfanumérico)
 export function validateStrongPassword(password) {
