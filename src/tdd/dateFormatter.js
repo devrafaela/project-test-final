@@ -24,3 +24,6 @@ export function formatDate(dateString) {
 
   return date.toLocaleDateString('pt-BR');
 }
+
+
+
