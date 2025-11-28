@@ -41,7 +41,10 @@ body {
 }
 
 /* Cores douradas */
-.text-gold { color: #ffffff !important; }
+.text-gold { 
+  color: #000000 !important; 
+}
+
 .btn-gold {
   background: linear-gradient(45deg, #fbbf24, #f59e0b);
   border: none;

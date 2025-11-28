@@ -176,11 +176,28 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
 const loginForm = document.getElementById("loginForm");
 const loginEmail = document.getElementById("loginEmail");
 const loginPassword = document.getElementById("loginPassword");
+
+// ELEMENTOS DA SEÇÃO DE PERFIL
+const profileSection = document.getElementById("profileSection");
+const profileEmail = document.getElementById("profileEmail");
+const profilePassword = document.getElementById("profilePassword");
+const profileBirth = document.getElementById("profileBirth");
+
 const logoutBtn = document.getElementById("logoutBtn");
 const marketSection = document.getElementById("marketSection");
 const itemCheckboxes = document.getElementById("itemCheckboxes");
 const itemList = document.getElementById("itemList");
 const totalEl = document.getElementById("total");
+
+// =======================
+// BOTÕES FINALIZAR / EDITAR / LIMPAR
+// =======================
+const finalizeBtn = document.getElementById("finalizeBtn");
+const editBtn = document.getElementById("editBtn");
+const clearBtn = document.getElementById("clearBtn"); // agora apenas referencia ao botão HTML
+
+const availableItemsCard = document.getElementById("availableItemsCard");
+const shoppingListCard = document.getElementById("shoppingListCard");
 
 // =======================
 // ITENS DINÂMICOS ALEATÓRIOS COMO CHECKBOX
@@ -241,6 +258,9 @@ availableItems.forEach(item => {
   });
 });
 
+
+/*
+
 // =======================
 // LOGIN SUBMIT
 // =======================
@@ -258,12 +278,45 @@ loginForm.addEventListener("submit", async (e) => {
     // mostra seção de mercado
     marketSection.style.display = "block";
 
+    // esconder formulário de login
+    loginForm.style.display = "none";
+
+    // pegar dados do usuário
+    const userData = authSystem.getUserData(email);
+
+    // preencher dados no perfil
+    profileEmail.textContent = userData.email;
+    profilePassword.textContent = "********"; // senha protegida
+    profileBirth.textContent = userData.date;
+
+    // mostrar perfil
+    profileSection.style.display = "block";
+
+    // salva login persistente
+    localStorage.setItem("loggedUser", email);
+
+    // popula itens do usuário no authSystem
+    authSystem.marketItems = userData.marketItems || [];
+    selectedItemsSet.clear();
+    authSystem.marketItems.forEach(item => selectedItemsSet.add(item.name));
+
+    // atualiza checkboxes e lista de itens
+    document.querySelectorAll("#itemCheckboxes input[type=checkbox]").forEach(checkbox => {
+      const name = checkbox.dataset.name;
+      if (selectedItemsSet.has(name)) {
+        checkbox.checked = true;
+        checkbox.disabled = true;
+      } else {
+        checkbox.checked = false;
+        checkbox.disabled = false;
+      }
+    });
+
+    updateMarket();
     // limpa campos de login
     loginEmail.value = "";
     loginPassword.value = "";
 
-    // atualiza lista de itens
-    updateMarket();
   } else {
     switch (result.error) {
       case "not_found":
@@ -281,11 +334,116 @@ loginForm.addEventListener("submit", async (e) => {
   }
 });
 
+
+*/
+
+// =======================
+// LOGIN SUBMIT
+// =======================
+loginForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = loginEmail.value.trim();
+  const password = loginPassword.value;
+
+  const result = await authSystem.login(email, password);
+
+  if (result.success) {
+    alert("Login efetuado com sucesso!");
+
+    // mostra seção de mercado
+    marketSection.style.display = "block";
+
+    // esconder formulário de login
+    loginForm.style.display = "none";
+
+    // tentar pegar dados do usuário (com proteção caso o método não exista)
+    let userData = null;
+    try {
+      if (typeof authSystem.getUserData === "function") {
+        userData = authSystem.getUserData(email);
+      } else if (typeof authSystem.getUser === "function") {
+        // fallback: alguns AuthSystems usam outro nome
+        userData = authSystem.getUser(email);
+      }
+    } catch (err) {
+      console.error("Erro ao chamar método de recuperação do usuário:", err);
+      userData = null;
+    }
+
+    // último fallback: procurar em localStorage (caso seu register salve usuários lá)
+    if (!userData) {
+      try {
+        const users = JSON.parse(localStorage.getItem("users") || "[]");
+        userData = users.find(u => u.email === email) || null;
+      } catch (err) {
+        console.error("Erro ao acessar localStorage para fallback de userData:", err);
+      }
+    }
+
+    // preencher dados no perfil (tratando quando userData for null)
+    profileEmail.textContent = userData?.email || email;
+    profilePassword.textContent = "********"; // senha protegida
+    profileBirth.textContent = userData?.date || userData?.birth || "-";
+
+    // mostrar perfil
+    profileSection.style.display = "block";
+
+    // salva login persistente
+    localStorage.setItem("loggedUser", email);
+
+    // popula itens do usuário no authSystem
+    authSystem.marketItems = userData?.marketItems || [];
+    selectedItemsSet.clear();
+    authSystem.marketItems.forEach(item => selectedItemsSet.add(item.name));
+
+    // atualiza checkboxes e lista de itens
+    document.querySelectorAll("#itemCheckboxes input[type=checkbox]").forEach(checkbox => {
+      const name = checkbox.dataset.name;
+      if (selectedItemsSet.has(name)) {
+        checkbox.checked = true;
+        checkbox.disabled = true;
+      } else {
+        checkbox.checked = false;
+        checkbox.disabled = false;
+      }
+    });
+
+    updateMarket();
+    // limpa campos de login
+    loginEmail.value = "";
+    loginPassword.value = "";
+
+  } else {
+    switch (result.error) {
+      case "not_found":
+        alert("Usuário não encontrado!");
+        break;
+      case "wrong_password":
+        alert("Senha incorreta!");
+        break;
+      case "invalid_email":
+        alert("Email inválido!");
+        break;
+      default:
+        alert("Erro desconhecido ao logar!");
+    }
+  }
+});
+
+
+
 // =======================
 // LOGOUT
 // =======================
 logoutBtn.addEventListener("click", () => {
   authSystem.logout();
+
+  localStorage.removeItem("loggedUser"); // <-- persitência removida
+
+  loginForm.style.display = "block";   // volta a exibir login
+  profileSection.style.display = "none"; // esconde perfil
+
   marketSection.style.display = "none";
   itemList.innerHTML = "";
   totalEl.textContent = "Total: R$ 0";
@@ -296,16 +454,6 @@ logoutBtn.addEventListener("click", () => {
   });
   alert("Logout realizado!");
 });
-
-// =======================
-// BOTÕES FINALIZAR / EDITAR / LIMPAR
-// =======================
-const finalizeBtn = document.getElementById("finalizeBtn");
-const editBtn = document.getElementById("editBtn");
-const clearBtn = document.getElementById("clearBtn"); // agora apenas referencia ao botão HTML
-
-const availableItemsCard = document.getElementById("availableItemsCard");
-const shoppingListCard = document.getElementById("shoppingListCard");
 
 // =======================
 // FINALIZA COMPRA
@@ -388,5 +536,10 @@ function updateMarket() {
     }
   });
 
-  totalEl.textContent = `Total: R$ ${authSystem.getMarketTotal()}`;
+  totalEl.textContent = `Total da Compra: R$ ${authSystem.getMarketTotal()}`;
+
+  // =======================
+  // HABILITA BOTÃO LIMPAR SE HOUVER ITENS
+  // =======================
+  clearBtn.style.display = authSystem.marketItems.length > 0 ? "inline-block" : "none";
 }
