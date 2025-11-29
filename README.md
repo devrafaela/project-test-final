@@ -38,6 +38,12 @@ Este projeto não apenas implementa um sistema funcional, mas também serve como
    ```
    > Isso instala Jest, Cucumber.js e outras bibliotecas necessárias.
 
+3. Rode o projeto
+   ```bash
+   npm run dev
+   ```
+   > Isso abre o projeto no navegador
+
 ---
 
 ## 📁 Estrutura do Projeto
