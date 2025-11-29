@@ -1,0 +1,25 @@
+project-test-final/
+├── src/
+│   ├── tdd/
+│   │   ├── validation.js          # Código principal do módulo TDD (validações de dados)
+│   │   ├── validation.test.js     # Arquivo de testes TDD com Jest
+│   │   └── dateFormatter.js       # Funcionalidade adicional: formatação de data
+│   ├── bdd/
+│   │   ├── features/
+│   │   │   ├── login.feature      # Cenário BDD para login/logout
+│   │   │   ├── register.feature   # Cenário adicional BDD para cadastro
+│   │   │   └── cart.feature       # Cenário adicional BDD para carrinho
+│   │   ├── step-definitions/
+│   │   │   ├── login-steps.js     # Implementação dos steps para login
+│   │   │   ├── register-steps.js  # Implementação dos steps para cadastro
+│   │   │   └── cart-steps.js      # Implementação dos steps para carrinho
+│   │   └── auth.js                # Código principal do módulo BDD (autenticação e carrinho)
+│   └── utils/
+│       └── helpers.js             # Funções auxiliares compartilhadas
+├── index.html                 # Página principal da aplicação web (interface bonita)
+├── styles.css                 # Estilos CSS para design responsivo e moderno
+├── app.js                     # JS para interatividade da interface (integra TDD e BDD)
+├── package.json                   # Configuração do projeto Node.js (dependências: Jest, Cucumber.js, etc.)
+├── jest.config.js                 # Configuração do Jest
+├── cucumber.js                    # Configuração do Cucumber.js
+└── README.md                      # Documentação rápida (opcional, mas útil)

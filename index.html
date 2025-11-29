@@ -1,0 +1,157 @@
+<!-- Página Principal da Interface Web
+   Esta é a aplicação web interativa que integra TDD e BDD
+   Usa Bootstrap para responsividade e design elegante com tons frios e dourados
+   Inclui formulários para cadastro (TDD) e login (BDD) com feedbacks dinâmicos -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Mercado - TDD & BDD</title>
+  <!-- Link para Bootstrap CSS (via CDN) para estilos responsivos -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Link para ícones do Bootstrap (para botões e elementos visuais) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Link para o CSS personalizado (estilos elegantes com tons frios e dourados) -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Container principal com fundo gradiente frio -->
+  <div class="container-fluid p-0">
+    <!-- Header elegante com gradiente -->
+    <header class="hero-header text-center py-4">
+      <h1 class="display-5 fw-bold text-gold animate-fade-in">Sistema de Mercado Virtual</h1>
+      <p class="lead text-light">TDD: Cadastro Estrito | BDD: Login e Itens</p>
+    </header>
+
+    <!-- Conteúdo principal -->
+    <div class="container my-5">
+      <div class="row">
+        <!-- Seção TDD: Cadastro Estrito -->
+        <div class="col-lg-6 mb-4">
+          <div class="card elegant-card animate-slide-up">
+            <div class="card-header bg-gold text-dark">
+              <h5><i class="bi bi-person-plus"></i> Cadastro de Usuário (TDD)</h5>
+            </div>
+            <div class="card-body">
+              <!-- Formulário de cadastro com validações dinâmicas -->
+              <form id="registerForm">
+                <!-- Campo de email com feedback dinâmico -->
+                <div class="mb-3">
+                  <label for="regEmail" class="form-label">Insira um e-mail válido</label>
+                  <input type="email" id="regEmail" class="form-control" placeholder="exemplo@email.com" required>
+                  <!-- feedback dinâmico -->
+                  <div id="emailFeedback" class="feedback mt-1 text-danger"></div>
+                </div>
+
+                <!-- Campo de senha com feedback dinâmico -->
+                <div class="mb-3">
+                  <label for="regPassword" class="form-label">Crie uma senha válida</label>
+                  <input type="password" id="regPassword" class="form-control" placeholder="Mín. 8 caracteres e 1 símbolo especial" required>
+                  <!-- feedback dinâmico -->
+                  <div id="passwordFeedback" class="feedback mt-1 text-danger"></div>
+
+                  <!-- Checkbox para mostrar/ocultar senha -->
+                  <div class="form-check mt-1">
+                    <input class="form-check-input" type="checkbox" id="showPassword">
+                    <label class="form-check-label" for="showPassword">
+                      Mostrar senha
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Campo de data com placeholder ajustado e máscara -->
+                <div class="mb-3">
+                  <label for="regDate" class="form-label">Data de Nascimento</label>
+                  <input type="text" id="regDate" class="form-control" placeholder="DD/MM/AAAA" maxlength="10" required>
+                  <!-- feedback dinâmico -->
+                  <div id="dateFeedback" class="feedback mt-1 text-danger"></div>
+                </div>
+
+                <!-- Botão de cadastro, desabilitado se inválido -->
+                <button type="submit" id="registerBtn" class="btn btn-gold w-100" disabled>Cadastrar</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Seção BDD: Login e Itens (Mantida, mas foco no TDD) -->
+        <div class="col-lg-6 mb-4">
+          <div class="card elegant-card animate-slide-up" style="animation-delay: 0.2s;">
+            <div class="card-header bg-gold text-dark">
+              <h5><i class="bi bi-box-arrow-in-right"></i> Login (BDD)</h5>
+            </div>
+            <div class="card-body">
+
+              <!-- Formulário de login -->
+              <form id="loginForm">
+                <div class="mb-3">
+                  <label for="loginEmail" class="form-label">E-mail</label>
+                  <input type="email" id="loginEmail" class="form-control" placeholder="Insira aqui seu e-mail" required>
+                </div>
+                <div class="mb-3">
+                  <label for="loginPassword" class="form-label">Senha</label>
+                  <input type="password" id="loginPassword" class="form-control" placeholder="Insira aqui sua senha" required>
+                </div>
+                <div class="d-flex gap-2">
+                  <button type="submit" class="btn btn-success">Login</button>
+                  <button type="button" id="logoutBtn" class="btn btn-warning">Logout</button>
+                </div>
+              </form>
+
+              <!-- SEÇÃO DO PERFIL DO USUÁRIO (aparece após login) -->
+              <div id="profileSection" class="mt-3" style="display: none;">
+                <div class="card elegant-card p-3 shadow-sm">
+                  <h5 class="text-gold mb-3"><i class="bi bi-person-circle"></i> Conta Logada</h5>
+
+                  <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+                  <p><strong>Senha:</strong> <span id="profilePassword"></span></p>
+                  <p><strong>Data de Nascimento:</strong> <span id="profileBirth"></span></p>
+
+                </div>
+              </div>
+
+
+
+              <!-- Seção de itens, visível após login -->
+              <div id="marketSection" class="mt-4" style="display: none;">
+
+                <!-- CARD: Adicionar Itens -->
+                <div class="card elegant-card shadow-sm p-3 mb-3 list-card" id="availableItemsCard">
+                  <h6 class="mb-3">Adicionar Itens de Mercado</h6>
+                  <div id="itemCheckboxes" class="d-flex flex-column gap-1">
+                    <!-- Checkboxes gerados pelo JS vão aqui -->
+                  </div>
+                </div>
+
+                <!-- CARD: Lista de Compras -->
+                <div class="card elegant-card shadow-sm p-3 list-card" id="shoppingListCard">
+                  <ul id="itemList" class="list-group mb-2">
+                    <!-- Itens adicionados aparecerão aqui -->
+                  </ul>
+                  <p id="total" class="fw-bold text-gold mb-0">Total: R$ 0</p>
+                  <div class="mt-3 d-flex gap-2">
+                    <!-- Botões com cores e IDs corretos -->
+                    <button id="finalizeBtn" class="btn btn-finalize">Finalizar Compra</button>
+                    <button id="editBtn" class="btn btn-edit" style="display:none;">Editar Compra</button>
+                    <button id="clearBtn" class="btn btn-clear" style="display:none;">Limpar Itens</button>
+                  </div>
+                </div>
+
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Script para Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Script para lógica interativa -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
