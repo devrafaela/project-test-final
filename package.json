@@ -7,7 +7,7 @@
   "scripts": {
     "test": "jest",
     "cucumber": "cucumber-js",
-    "bdd": "npx cucumber-js src/bdd/features --import src/bdd/support/world.js --import src/bdd/step-definition/**/*.js",
+    "bdd": "npx cucumber-js src/bdd/features --require src/bdd/support/world.js --require src/bdd/step-definition/**/*.js",
     "dev": "browser-sync start --server --files \"**/*\""
   },
   "repository": {

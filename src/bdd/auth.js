@@ -162,4 +162,15 @@ export class AuthSystem {
   getMarketTotal() {
     return this.marketItems.reduce((t, i) => t + i.price, 0);
   }
+
+  // ============================
+  // Reseta usuários e mercado (para testes BDD)
+  // ============================
+  resetSystem() {
+    this.users = [];
+    this.loggedInUser = null;
+    this.marketItems = [];
+    localStorage.setItem("users", JSON.stringify([]));
+    localStorage.setItem("marketItems", JSON.stringify([]));
+  }
 }

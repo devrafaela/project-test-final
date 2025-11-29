@@ -1,14 +1,15 @@
-# Cenário BDD para Adição de Itens de Mercado (Aleatórios)
-# Foca no comportamento de adicionar itens aleatórios após login e calcular total
-# Este arquivo define cenários para testar a funcionalidade de itens aleatórios
+# ============================================================
+# Cenário BDD para Adição de Itens de Mercado Aleatórios
+# Foca em adicionar itens aleatórios após login e verificar total
+# ============================================================
 
-Feature: Adição de Itens de Mercado Aleatórios
-  Como usuário logado
-  Eu quero adicionar itens aleatórios
-  Para ver o total dos preços selecionados
+Feature: Adding Random Market Items
+  As a logged-in user
+  I want to add random items
+  So that I can see the total of selected prices
 
-  Scenario: Adicionar itens aleatórios e calcular total
-    Dado que eu estou logado com email "teste@example.com"
-    Quando eu adiciono "Item Aleatório 1" com preço 15
-    E eu adiciono "Item Aleatório 2" com preço 20
-    Então o total deve ser 35
+  Scenario: Add random items and calculate total
+    Given I am logged in for cart with email "teste@example.com"
+    When I add "Random Item 1" with price 15 to cart
+    And I add "Random Item 2" with price 20 to cart
+    Then the total in cart should be 35
